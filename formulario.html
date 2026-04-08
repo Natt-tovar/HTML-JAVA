@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Usuario - UdeC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input.valid {
+            border-color: #4CAF50;
+            background-color: #f8fff8;
+        }
+
+        input.invalid {
+            border-color: #f44336;
+            background-color: #fff8f8;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .strength-weak { background: #f44336; width: 33%; }
+        .strength-medium { background: #ff9800; width: 66%; }
+        .strength-strong { background: #4CAF50; width: 100%; }
+
+        .toggle-password {
+            cursor: pointer;
+            color: #667eea;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🎓 Formulario de Alta de Usuario</h1>
+        <p style="text-align: center; color: #666;">Por favor, complete todos los campos para su inscripción en UdeC.</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <p style="text-align: center; font-size: 12px; color: #666;" id="progressText">0% completado</p>
+
+        <hr>
+
+        <form id="registroForm" action="mailto:registro@udec.edu.co" method="POST" onsubmit="return validarEnvio(event)">
+
+            <h3>📋 Datos Personales</h3>
+
+            <label>Tipo de Documento: *</label>
+            <select name="tipo_doc" id="tipoDoc" required onchange="validarCampo(this)">
+                <option value="">Seleccione...</option>
+                <option value="CC">Cédula de Ciudadanía</option>
+                <option value="TI">Tarjeta de Identidad</option>
+                <option value="CE">Cédula de Extranjería</option>
+            </select>
+            <span class="error-message" id="error-tipoDoc">Seleccione un tipo de documento</span>
+
+            <label>Número de Documento: *</label>
+            <input type="text" name="documento" id="documento" required 
+                   onkeyup="validarDocumento()" onblur="validarDocumento()">
+            <span class="error-message" id="error-documento">Ingrese solo números (mínimo 6 dígitos)</span>
+            <span class="success-message" id="success-documento">✓ Documento válido</span>
+
+            <label>Nombres y Apellidos: *</label>
+            <input type="text" name="nombres" id="nombres" required 
+                   onkeyup="validarNombres()" onblur="validarNombres()">
+            <span class="error-message" id="error-nombres">Ingrese al menos 3 caracteres</span>
+            <span class="success-message" id="success-nombres">✓ Nombre válido</span>
+
+            <label>Dirección:</label>
+            <input type="text" name="direccion" id="direccion">
+
+            <label>Teléfono:</label>
+            <input type="tel" name="telefono" id="telefono" 
+                   onkeyup="validarTelefono()" onblur="validarTelefono()">
+            <span class="error-message" id="error-telefono">Ingrese un número válido (7-10 dígitos)</span>
+
+            <label>Correo Electrónico: *</label>
+            <input type="email" name="email" id="email" required 
+                   onkeyup="validarEmail()" onblur="validarEmail()">
+            <span class="error-message" id="error-email">Ingrese un correo válido</span>
+            <span class="success-message" id="success-email">✓ Correo válido</span>
+
+            <h3>🔐 Acceso al Servicio</h3>
+            
+            <label>Usuario: *</label>
+            <input type="text" name="usuario" id="usuario" 
+                   required 
+                   minlength="3" 
+                   maxlength="16" 
+                   pattern="^[a-zA-Z]+[0-9]{0,2}$"
+                   title="Letras y hasta dos números al final (3-16 caracteres)"
+                   onkeyup="validarUsuario()" onblur="validarUsuario()">
+            <span class="error-message" id="error-usuario">
+                Debe iniciar con letras, opcional hasta 2 números al final (3-16 caracteres)
+            </span>
+            <span class="success-message" id="success-usuario">✓ Usuario disponible</span>
+            <br>
+            <small style="color: #666;">(3-16 caracteres, letras y opcional 2 números al final)</small>
+
+            <label>Contraseña: *</label>
+            <div style="position: relative;">
+                <input type="password" name="password" id="password" 
+                       required 
+                       minlength="16" 
+                       maxlength="16"
+                       title="16 caracteres: 1 mayúscula, 2 minúsculas, 5 números y un carácter especial"
+                       onkeyup="validarPassword()" onblur="validarPassword()">
+                <span class="toggle-password" onclick="togglePassword()">👁️ Mostrar</span>
+            </div>
+            <div class="password-strength" id="passwordStrength"></div>
+            <span class="error-message" id="error-password">
+                Exactamente 16 caracteres: 1 mayúscula, 2 minúsculas, 5 números y 1 especial (!?-+/&$)
+            </span>
+            <span class="success-message" id="success-password">✓ Contraseña segura</span>
+            <br>
+            <small style="color: #666;">(Exactamente 16 caracteres con reglas de seguridad estrictas)</small>
+
+            <label>Confirmar Contraseña: *</label>
+            <input type="password" id="confirmPassword" required 
+                   onkeyup="validarConfirmacion()" onblur="validarConfirmacion()">
+            <span class="error-message" id="error-confirm">Las contraseñas no coinciden</span>
+
+            <button type="submit" id="submitBtn">🚀 Registrarse</button>
+        </form>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div id="modalExito" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            <h2 style="color: #4CAF50;">✅ ¡Registro Exitoso!</h2>
+            <p>Tu información ha sido validada correctamente.</p>
+            <p style="font-size: 14px; color: #666; margin-top: 20px;">
+                Se abrirá tu cliente de correo para enviar la solicitud.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const camposRequeridos = ['tipoDoc', 'documento', 'nombres', 'email', 'usuario', 'password', 'confirmPassword'];
+        
+        function validarDocumento() {
+            const input = document.getElementById('documento');
+            const valor = input.value.trim();
+            const regex = /^\d{6,}$/;
+            
+            if (regex.test(valor)) {
+                marcarValido(input, 'documento');
+                return true;
+            } else {
+                marcarInvalido(input, 'documento');
+                return false;
+            }
+        }
+        
+        function validarNombres() {
+            const input = document.getElementById('nombres');
+            const valor = input.value.trim();
+            
+            if (valor.length >= 3 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(valor)) {
+                marcarValido(input, 'nombres');
+                return true;
+            } else {
+                marcarInvalido(input, 'nombres');
+                return false;
+            }
+        }
+        
+        function validarTelefono() {
+            const input = document.getElementById('telefono');
+            const valor = input.value.trim();
+            
+            if (valor === '') {
+                input.classList.remove('valid', 'invalid');
+                return true;
+            }
+            
+            if (/^\d{7,10}$/.test(valor)) {
+                input.classList.add('valid');
+                input.classList.remove('invalid');
+                document.getElementById('error-telefono').style.display = 'none';
+                return true;
+            } else {
+                input.classList.add('invalid');
+                input.classList.remove('valid');
+                document.getElementById('error-telefono').style.display = 'block';
+                return false;
+            }
+        }
+        
+        function validarEmail() {
+            const input = document.getElementById('email');
+            const valor = input.value.trim();
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (regex.test(valor)) {
+                marcarValido(input, 'email');
+                return true;
+            } else {
+                marcarInvalido(input, 'email');
+                return false;
+            }
+        }
+        
+        function validarUsuario() {
+            const input = document.getElementById('usuario');
+            const valor = input.value.trim();
+            const regex = /^[a-zA-Z]+[0-9]{0,2}$/;
+            
+            if (regex.test(valor) && valor.length >= 3 && valor.length <= 16) {
+                marcarValido(input, 'usuario');
+                return true;
+            } else {
+                marcarInvalido(input, 'usuario');
+                return false;
+            }
+        }
+        
+        function validarPassword() {
+            const input = document.getElementById('password');
+            const valor = input.value;
+            
+            const regex = /^(?=.*[A-Z])(?=.*[a-z].*[a-z])(?=.*[0-9].*[0-9].*[0-9].*[0-9].*[0-9])(?=.*[!?\-+/&$]).{16}$/;
+            
+            const tieneMayuscula = /[A-Z]/.test(valor);
+            const tieneMinusculas = (valor.match(/[a-z]/g) || []).length >= 2;
+            const tieneNumeros = (valor.match(/[0-9]/g) || []).length >= 5;
+            const tieneEspecial = /[!?\-+/&$]/.test(valor);
+            const longitudCorrecta = valor.length === 16;
+            
+            const strengthBar = document.getElementById('passwordStrength');
+            let fuerza = 0;
+            if (tieneMayuscula) fuerza++;
+            if (tieneMinusculas) fuerza++;
+            if (tieneNumeros) fuerza++;
+            if (tieneEspecial) fuerza++;
+            if (longitudCorrecta) fuerza++;
+            
+            strengthBar.className = 'password-strength';
+            if (fuerza <= 2) strengthBar.classList.add('strength-weak');
+            else if (fuerza <= 4) strengthBar.classList.add('strength-medium');
+            else strengthBar.classList.add('strength-strong');
+            
+            if (regex.test(valor)) {
+                marcarValido(input, 'password');
+                return true;
+            } else {
+                marcarInvalido(input, 'password');
+                return false;
+            }
+        }
+        
+        function validarConfirmacion() {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword');
+            
+            if (confirm.value === password && confirm.value !== '') {
+                confirm.classList.add('valid');
+                confirm.classList.remove('invalid');
+                document.getElementById('error-confirm').style.display = 'none';
+                return true;
+            } else {
+                confirm.classList.add('invalid');
+                confirm.classList.remove('valid');
+                document.getElementById('error-confirm').style.display = 'block';
+                return false;
+            }
+        }
+        
+        function marcarValido(input, campo) {
+            input.classList.add('valid');
+            input.classList.remove('invalid');
+            document.getElementById('error-' + campo).style.display = 'none';
+            document.getElementById('success-' + campo).style.display = 'block';
+            actualizarProgreso();
+        }
+        
+        function marcarInvalido(input, campo) {
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            document.getElementById('error-' + campo).style.display = 'block';
+            document.getElementById('success-' + campo).style.display = 'none';
+            actualizarProgreso();
+        }
+        
+        function validarCampo(select) {
+            if (select.value !== '') {
+                select.classList.add('valid');
+                select.classList.remove('invalid');
+            } else {
+                select.classList.add('invalid');
+                select.classList.remove('valid');
+            }
+            actualizarProgreso();
+        }
+        
+        function togglePassword() {
+            const password = document.getElementById('password');
+            const toggle = document.querySelector('.toggle-password');
+            
+            if (password.type === 'password') {
+                password.type = 'text';
+                toggle.textContent = '🙈 Ocultar';
+            } else {
+                password.type = 'password';
+                toggle.textContent = '👁️ Mostrar';
+            }
+        }
+        
+        function actualizarProgreso() {
+            let completados = 0;
+            let total = camposRequeridos.length;
+            
+            camposRequeridos.forEach(id => {
+                const elem = document.getElementById(id);
+                if (elem && elem.classList.contains('valid')) {
+                    completados++;
+                }
+            });
+            
+            if (document.getElementById('tipoDoc').value !== '') completados++;
+            
+            const porcentaje = Math.round((completados / total) * 100);
+            document.getElementById('progressBar').style.width = porcentaje + '%';
+            document.getElementById('progressText').textContent = porcentaje + '% completado';
+        }
+        
+        function validarEnvio(event) {
+            event.preventDefault();
+            
+            const validaciones = [
+                document.getElementById('tipoDoc').value !== '',
+                validarDocumento(),
+                validarNombres(),
+                validarEmail(),
+                validarUsuario(),
+                validarPassword(),
+                validarConfirmacion()
+            ];
+            
+            const telefono = document.getElementById('telefono').value;
+            if (telefono !== '') {
+                validaciones.push(validarTelefono());
+            }
+            
+            if (validaciones.every(v => v === true)) {
+                document.getElementById('modalExito').style.display = 'block';
+                
+                setTimeout(() => {
+                    document.getElementById('registroForm').submit();
+                }, 2000);
+                
+                return true;
+            } else {
+                alert('Por favor, corrija los errores marcados en rojo antes de continuar.');
+                
+                const primerError = document.querySelector('.invalid');
+                if (primerError) {
+                    primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                return false;
+            }
+        }
+        
+        function cerrarModal() {
+            document.getElementById('modalExito').style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalExito');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        actualizarProgreso();
+    </script>
+
+</body>
+</html>
