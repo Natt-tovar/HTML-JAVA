@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hoja de Vida - Aslhey Natalia Tovar Hurtado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            animation: slideIn 0.8s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sidebar {
+            width: 35%;
+            background: linear-gradient(180deg, #2C2F3A 0%, #1a1d26 100%);
+            color: white;
+            padding: 40px 25px;
+        }
+
+        .photo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .photo {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .contact-item {
+            margin: 12px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .contact-item b {
+            color: #667eea;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .reference {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .main-content {
+            width: 65%;
+            padding: 40px;
+            background: #ffffff;
+        }
+
+        .name {
+            font-size: 36px;
+            color: #2C2F3A;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .profession {
+            font-size: 18px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .content-section {
+            margin: 25px 0;
+        }
+
+        .content-section h3 {
+            color: #2C2F3A;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-section h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 2px;
+        }
+
+        .profile-text {
+            text-align: justify;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .education-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .education-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .education-table td:first-child {
+            color: #667eea;
+            font-weight: 600;
+            width: 30%;
+        }
+
+        .experience-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin: 10px 0;
+        }
+
+        .personal-info {
+            list-style: none;
+        }
+
+        .personal-info li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+        }
+
+        .personal-info li b {
+            color: #667eea;
+            min-width: 150px;
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 30px;
+        }
+
+        .signature-line {
+            border-top: 2px solid #333;
+            width: 250px;
+            margin: 0 auto 10px auto;
+            padding-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar, .main-content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Panel Lateral -->
+        <div class="sidebar">
+            <div class="photo-container">
+                <img src="foto.jpg" alt="Foto de perfil" class="photo" onerror="this.src='https://via.placeholder.com/160x160/667eea/ffffff?text=AN'">
+            </div>
+
+            <h3 class="section-title">📞 Contacto</h3>
+            
+            <div class="contact-item">
+                <b>Teléfono:</b>
+                313 464 9686
+            </div>
+            
+            <div class="contact-item">
+                <b>Correo:</b>
+                nataliatovarhuta@gmail.com
+            </div>
+            
+            <div class="contact-item">
+                <b>Identificación:</b>
+                1.016.010.508
+            </div>
+            
+            <div class="contact-item">
+                <b>Licencia:</b>
+                Categoría A2
+            </div>
+            
+            <div class="contact-item">
+                <b>Ciudad:</b>
+                Girardot, Cundinamarca
+            </div>
+
+            <h3 class="section-title">👥 Referencias Personales</h3>
+            
+            <div class="reference">
+                <b>Alexandra Tovar</b> (Docente)<br>
+                📱 312 417 8418
+            </div>
+            
+            <div class="reference">
+                <b>David Ruiz</b> (Estudiante)<br>
+                📱 314 480 7428
+            </div>
+
+            <h3 class="section-title">👨‍👩‍👧 Referencias Familiares</h3>
+            
+            <div class="reference">
+                <b>Eduar Hurtado</b> (Tío)<br>
+                📱 313 846 3601
+            </div>
+            
+            <div class="reference">
+                <b>Harol Tovar</b> (Padre)<br>
+                📱 315 225 2388
+            </div>
+        </div>
+
+        
+        <div class="main-content">
+            <div style="margin-bottom: 30px;">
+                <h1 class="name">ASLHEY NATALIA<br>TOVAR HURTADO</h1>
+                <p class="profession">💻 Estudiante de Ingeniería de Software</p>
+            </div>
+
+            <div class="content-section">
+                <h3>Perfil Profesional</h3>
+                <p class="profile-text">
+                    Soy una persona con alto grado de responsabilidad y compromiso, dinámica en el desempeño 
+                    de mis funciones, con sensibilidad social y capacidad para realizar las tareas asignadas. 
+                    Cuento con iniciativa y excelentes relaciones interpersonales, orientado al cumplimiento 
+                    de metas y objetivos dentro del desarrollo de software.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h3>Formación Académica</h3>
+                <table class="education-table">
+                    <tr>
+                        <td>🎓 Pregrado:</td>
+                        <td>
+                            <b>Ingeniería de Software</b> (4to Semestre)<br>
+                            Universidad de Cundinamarca
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>📋 Técnico:</td>
+                        <td>
+                            <b>Tecnólogo en Gestión Administrativa</b><br>
+                            SENA - Girardot
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>📚 Secundaria:</td>
+                        <td>
+                            <b>Bachiller Académico</b><br>
+                            Inst. Manuel Elkin Patarroyo
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="content-section">
+                <h3>Experiencia Laboral</h3>
+                <div class="experience-box">
+                    <b>Independiente - Cajero</b>
+                    <i style="color: #667eea; display: block; margin: 5px 0;">Mayo 2024 - Octubre 2024 (5 meses)</i>
+                    <p style="margin-top: 8px; color: #666; font-size: 14px;">
+                        <b>Jefe:</b> Yanet - 📞 310 293 5151
+                    </p>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Información Personal</h3>
+                <ul class="personal-info">
+                    <li><b>Fecha de Nacimiento:</b> 27 de Mayo de 2006</li>
+                    <li><b>Lugar de Nacimiento:</b> Bogotá</li>
+                    <li><b>Estado Civil:</b> Soltero</li>
+                    <li><b>Dirección:</b> Mz 52 Casa 11, Barrio Kennedy</li>
+                </ul>
+            </div>
+
+            <div class="signature">
+                <div class="signature-line"></div>
+                <b>Firma del Aspirante</b>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
